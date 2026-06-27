@@ -43,4 +43,3 @@ def main():
     print("Language:", obj["language"])
     return obj 
 
-main()
