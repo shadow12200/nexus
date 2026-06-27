@@ -5,6 +5,22 @@ import os
 from communicator import main as commands
 
 command_obj = commands()
+CONTAINER = "nexus-sandbox"
+
+def docker_exec(command):
+    return subprocess.run(
+        [
+            "docker",
+            "exec",
+            CONTAINER,
+            "bash",
+            "-c",
+            command,
+        ],
+        capture_output=True,
+        text=True,
+    )
+
 
 def git_initialise(myproject):
     commands=['git init',f'gh repo create {myproject} --private --source=. --remote=origin','git add .','git commit -m "auto commit"','git push']
@@ -31,16 +47,20 @@ def execute_commands(command_obj):
     language = command_obj["language"]
     commands = command_obj["commands"]
 
-    if language == "bash":
-        for command in commands:
-            result = subprocess.run(command, shell=True, capture_output=True, text=True)
-            print(result.stdout)
-            if result.returncode != 0:
-                print(f"Error executing command: {command}")
-                print(result.stderr)
-                break
-    else:
-        raise Exception(f"Unsupported language: {language}")
+    if language != "bash":
+        raise ValueError(f"Unsupported language: {language}")
+
+    script = "\n".join(commands)
+
+    result = docker_exec(script)
+
+    print(result.stdout)
+
+    if result.returncode != 0:
+        print(f"Error executing commands")
+        print(result.stderr)
+        
+                
 
 
 check_initial()
