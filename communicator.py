@@ -66,7 +66,7 @@ def file_builder():
         ]
         }
         """
-    prompt = input("> ")
+    prompt = input("file-prompt--> ")
 
     response = requests.post(
         "http://localhost:11434/api/generate",
@@ -95,7 +95,7 @@ def main():
         print("2. File Builder")
         print("3. Exit")
 
-        choice = input("> ")
+        choice = input("choice --> ")
 
         if choice == "1":
             obj = bash_prompter()
@@ -109,4 +109,3 @@ def main():
             print("Invalid choice. Please try again.")
 
 
-            
