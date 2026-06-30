@@ -9,7 +9,7 @@ def bash_prompter():
     Return ONLY valid JSON.
     Never use markdown.
     Never wrap JSON in ```.
-
+    note : directory is created and active so exclude mkdir and chdir until specified 
     Schema:
 
     {
@@ -51,6 +51,7 @@ def file_builder():
         Return ONLY valid JSON.
         Never use markdown.
         Never wrap JSON in ```.
+        note : directory is created and active so exclude mkdir and chdir until specified 
 
         start with 
         1.bash command to create file

@@ -9,7 +9,7 @@ LOGO=('''
                                                                        
 ''')
 
-from communicator import main as prompter
+from communicator import main 
 import executor as ex
 
 
@@ -29,14 +29,14 @@ def run_main():#need to model behaviour based on initialisation condition
     project_name = get_details()[0]
     if project_name:
         print(f"initialising project: {project_name}")
-        commands=[f'mkdir {project_name}',f'chdir {project_name}','echo working']
-        main_cmd="\n".join(commands)
-        ex.docker_exec(main_cmd)
-        ex.wrapped_main()
+        commands=[f'mkdir {project_name}',f'cd {project_name}']
+        command_obj=main()
+        ex.wrapped_main(command_obj,commands)
         ex.git_initialise(project_name)
-        ex.git_push()
-
+        #ex.git_push()#no problemo 
         #provide workflow to initialise dir and git
+
+
     else:
         pwd=input("please entre project directory :")
         commands=[f'chdir {pwd}']

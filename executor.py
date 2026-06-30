@@ -2,8 +2,6 @@
 #we will fetch and execute commands in this script
 import subprocess
 import os
-from communicator import main as commands
-
 #command_obj = commands()
 CONTAINER = "nexus-sandbox"
 
@@ -23,7 +21,13 @@ def docker_exec(command):
 
 
 def git_initialise(myproject):
-    commands=['git init',f'gh repo create {myproject} --private --source=. --remote=origin','git add .','git commit -m "auto commit"','git push']
+    commands = [
+    f"cd {myproject}",
+    "git init -b main",
+    "git add .",
+    'git commit -m "Initial commit"',
+    f"gh repo create {myproject} --private --source=. --remote=origin --push"
+]
     main_cmd="\n".join(commands)
     docker_exec(main_cmd)
 
@@ -43,9 +47,11 @@ def check_initial():
     result = subprocess.run(command, shell=True, capture_output=True, text=True)
     print(result.stdout)
 
-def execute_commands(command_obj):
+def execute_commands(command_obj,prelist):
     language = command_obj["language"]
-    commands = command_obj["commands"]
+    commands = []
+    for i in prelist : commands.append(i)
+    for i in command_obj["commands"] : commands.append(i)
 
     if language != "bash":
         raise ValueError(f"Unsupported language: {language}")
@@ -62,7 +68,7 @@ def execute_commands(command_obj):
         
                 
 
-def wrapped_main():
+def wrapped_main(command_obj,prelist):
     check_initial()
-    command_obj = commands()
-    execute_commands(command_obj)
+    execute_commands(command_obj,prelist)
+    
