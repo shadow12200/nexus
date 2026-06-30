@@ -4,7 +4,7 @@ import subprocess
 import os
 from communicator import main as commands
 
-command_obj = commands()
+#command_obj = commands()
 CONTAINER = "nexus-sandbox"
 
 def docker_exec(command):
@@ -24,14 +24,14 @@ def docker_exec(command):
 
 def git_initialise(myproject):
     commands=['git init',f'gh repo create {myproject} --private --source=. --remote=origin','git add .','git commit -m "auto commit"','git push']
-    for command in commands:
-        result = subprocess.run(command, shell=True, capture_output=True, text=True)
-        print(result.stdout)
-        if result.returncode != 0:
-            print(f"Error executing command: {command}")
-            print(result.stderr)
-            break
+    main_cmd="\n".join(commands)
+    docker_exec(main_cmd)
 
+
+def git_push():
+    commands=['git add .',f'git commit -m {input('commit message :')}','git push']
+    main_cmd="\n".join(commands)
+    docker_exec(main_cmd)
 
 def check_initial():
     pwd=os.getcwd()
@@ -62,8 +62,7 @@ def execute_commands(command_obj):
         
                 
 
-
-check_initial()
-execute_commands(command_obj)
-
-
+def wrapped_main():
+    check_initial()
+    command_obj = commands()
+    execute_commands(command_obj)
