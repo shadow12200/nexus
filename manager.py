@@ -27,21 +27,18 @@ def get_details():
 def run_main():#need to model behaviour based on initialisation condition
     print(LOGO)
     project_name = get_details()[0]
-    if project_name:
+    if project_name:# this branch is working as intended 
         print(f"initialising project: {project_name}")
         commands=[f'mkdir {project_name}',f'cd {project_name}']
         command_obj=main()
         ex.wrapped_main(command_obj,commands)
         ex.git_initialise(project_name)
-        #ex.git_push()#no problemo 
-        #provide workflow to initialise dir and git
-
 
     else:
         pwd=input("please entre project directory :")
-        commands=[f'chdir {pwd}']
-        ex.docker_exec(commands)
-        ex.wrapped_main()
+        commands=[f'cd {pwd}']
+        command_obj=main()
+        ex.wrapped_main(command_obj,commands)
         ex.git_push(pwd)
 
 run_main()

@@ -20,7 +20,7 @@ def docker_exec(command):
     )
 
 
-def git_initialise(myproject):
+def git_initialise(myproject):#resolved and working
     commands = [
     f"cd {myproject}",
     "git init -b main",
@@ -31,11 +31,22 @@ def git_initialise(myproject):
     main_cmd="\n".join(commands)
     docker_exec(main_cmd)
 
+def git_push(pwd):
+    message = input("Commit message: ")
 
-def git_push():
-    commands=['git add .',f'git commit -m {input('commit message :')}','git push']
-    main_cmd="\n".join(commands)
-    docker_exec(main_cmd)
+    commands = [
+        f"cd {pwd}",
+        "git add .",
+        f'git commit -m "{message}"',
+        "git push"
+    ]
+
+    result = docker_exec("\n".join(commands))
+
+    if result.returncode != 0:
+        print(result.stderr)
+    else:
+        print("✓ Changes pushed successfully.")
 
 def check_initial():
     pwd=os.getcwd()
